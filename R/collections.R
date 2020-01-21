@@ -275,12 +275,12 @@ read_articles_json <- function(articles_file, site_dir, site_config, collection)
 
 move_feed_categories_xml <- function(main_feed, site_config) {
   for (category in site_config$rss$categories) {
-    posts <- xml2::read_xml(main_feed)
+    blog <- xml2::read_xml(main_feed)
     category_filter <- paste0("/rss/channel/item/category[text()='", category, "']/..")
-    filtered <- xml2::xml_find_all(posts, category_filter)
+    filtered <- xml2::xml_find_all(blog, category_filter)
 
-    xml2::xml_remove(xml2::xml_find_first(posts, "/rss/channel/item"))
-    channel_root <- xml2::xml_find_first(posts, "/rss/channel")
+    xml2::xml_remove(xml2::xml_find_first(blog, "/rss/channel/item"))
+    channel_root <- xml2::xml_find_first(blog, "/rss/channel")
     for (entry in filtered) {
       xml2::xml_add_child(channel_root, entry)
     }
@@ -288,7 +288,7 @@ move_feed_categories_xml <- function(main_feed, site_config) {
     target_path <- file.path(site_config$output_dir, "categories", tolower(category))
     if (!dir.exists(target_path)) dir.create(target_path, recursive = TRUE)
 
-    xml2::write_xml(posts, file.path(target_path, basename(main_feed)))
+    xml2::write_xml(blog, file.path(target_path, basename(main_feed)))
   }
 }
 
@@ -863,7 +863,7 @@ site_collections <- function(site_dir, site_config) {
     if (!name %in% names(collections))
       collections[[name]] <<- list()
   }
-  ensure_collection("posts")
+  ensure_collection("blog")
   ensure_collection("articles")
 
   # filter on directory existence
