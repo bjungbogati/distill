@@ -863,7 +863,7 @@ site_collections <- function(site_dir, site_config) {
     if (!name %in% names(collections))
       collections[[name]] <<- list()
   }
-  ensure_collection(site_config$blog_dir)
+  ensure_collection("posts")
   ensure_collection("articles")
 
   # filter on directory existence
